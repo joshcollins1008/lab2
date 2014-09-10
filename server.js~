@@ -90,7 +90,7 @@ var dropbox = function(ix,room) {
 	room.what.push(item);
 }
 
-var agents = {"jayhawk":{"inventory":["laptop"],"location":"stong-hall"}}
+//var agents = {"jayhawk":{"inventory":["laptop"],"location":"stong-hall"}}
 
 
 var inventory = ["laptop"];
