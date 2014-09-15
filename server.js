@@ -1,19 +1,19 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 
+var userID;
+
 var app = express();
 
 app.use(cookieParser());
 
 app.use( function(req,res,next) {
-
-	var userID;
 	
-	req.userid = userID;
+	userID = req.cookie;
 
-	if(!userID){
+	if(userID == 0){
 
-		res.userID = Math.random(); 
+		res.cookie = Math.random(); 
 	}
 
 next();

@@ -1,19 +1,19 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 
+var userID;
+
 var app = express();
 
 app.use(cookieParser());
 
 app.use( function(req,res,next) {
-
-	var userID;
 	
-	req.userid = userID;
+	userID = req.cookie;
 
-	if(!userID){
+	if(userID == 0){
 
-		res.userID = "123456";
+		res.cookie = Math.random(); 
 	}
 
 next();
@@ -27,7 +27,7 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname + "/index.html");
 });
 
-app.get('/:id', function(req, res){
+app.get('/:userID/:id', function(req, res){
 	if (req.params.id == "inventory") {
 	    res.set({'Content-Type': 'application/json'});
 	    res.status(200);
@@ -51,7 +51,7 @@ app.get('/images/:name', function(req, res){
 	res.sendFile(__dirname + "/" + req.params.name);
 });
 
-app.delete('/:id/:item', function(req, res){
+app.delete('/:userID/:id/:item', function(req, res){
 	for (var i in campus) {
 		if (req.params.id == campus[i].id) {
 		    res.set({'Content-Type': 'application/json'});
@@ -75,7 +75,7 @@ app.delete('/:id/:item', function(req, res){
 	res.send("location not found");
 });
 
-app.put('/:id/:item', function(req, res){
+app.put('/:userID/:id/:item', function(req, res){
 	for (var i in campus) {
 		if (req.params.id == campus[i].id) {
 				// Check you have this
