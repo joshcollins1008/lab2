@@ -1,5 +1,26 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
+
 var app = express();
+
+app.use(cookieParser());
+
+app.use( function(req,res,next) {
+
+	var userID;
+	
+	req.userid = userID;
+
+	if(!userID){
+
+		res.userID = "123456";
+	}
+
+next();
+
+});
+
+
 
 app.get('/', function(req, res){
 	res.status(200);
@@ -90,7 +111,7 @@ var dropbox = function(ix,room) {
 	room.what.push(item);
 }
 
-//var agents = {"jayhawk":{"inventory":["laptop"],"location":"stong-hall"}}
+var agents = {"jayhawk":{"inventory":["laptop"],"location":"stong-hall"}}
 
 
 var inventory = ["laptop"];
