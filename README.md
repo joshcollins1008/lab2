@@ -6,6 +6,9 @@ lab2
 // Install Dependencies
 npm install express
 
+// Install cookie-parser
+npm install cookie-parser
+
 // Launch Server
 node server.js
 
