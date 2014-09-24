@@ -1,15 +1,11 @@
 <html>
   <body>
   <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	<div style="width: 100%; height: 51px; background-color: #EEE; line-height: 51px;">
-	<a id="loginbutton" style="float: right; margin-right: 33px; cursor: pointer; color: green;">Game Login</a>
-	<span id="welcome" style="float: right; margin-right: 33px;"></span>
-	</div>
 	<div id="loginbox">
 	<div id="shadow" style="position: fixed; width: 100%; height: 100%; background-color: #DDD; opacity: .4; z-index: 2;"></div>
-	<div id="login" style="position: fixed; top: 50%; left: 50%; margin-left: -150px; margin-top: -150px; width: 300px; height: 300px; background-color: #FFF; z-index: 3;>">
+	<div id="login" style="position: fixed; top: 50%; left: 50%; margin-left: -150px; margin-top: -150px; width: 300px; height: 200px; background-color: #FFF; z-index: 3;>">
 	<center style="margin-top: 50px">Character Name: <input class="form-control" id="username"></input><br>
-	<div class="btn btn-default" id="button">Enter</div></center>
+	<div class="btn btn-default" id="button">Login</div></center>
 	</div>
 </div>
 
@@ -57,8 +53,7 @@
 			});
 
 			$("#loginbox").toggle();
-			$("#loginbutton").toggle();
-			$("#welcome").html("Welcome, " + $("#username").val());
+			$("#loginbutton").toggle();	
 			$("#welcome").toggle();
 			$("#content").toggle();
 			userid = $("#username").val();
@@ -80,6 +75,7 @@
       where = "strong-hall";
 	players = "me";
 
+     //Main gameloop updated to use the userID where possible	
       function refresh() {
 	$.get("/" + userid + "/players", function (data) {
 		players = data;
