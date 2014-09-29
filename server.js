@@ -1,11 +1,36 @@
 var express = require('express');
 var app = express();
 
+// Reading a file
+var fs = require('fs');
+var file = __dirname + '/inventories.json';
+
+fs.readFile(file, 'utf8', function (err, data) {
+  if (err) {
+    console.log('Error: ' + err);
+    return;
+  }
+
+  data = JSON.parse(data);
+  console.dir(data);
+});
+
+
+// Writing a file
+var stream = fs.createWriteStream("inventories.txt");
+stream.once( 'open', function(fd) {
+stream.write();
+stream.end();
+});
+
 
 var player_list = {};
 var player_inv =  {};
 var player_loc = {};
 var players_in_loc = {};
+
+
+
 
 app.get('/', function(req, res){
 	res.status(200);
@@ -65,6 +90,8 @@ app.get('/:userid/:id', function(req, res){
 	res.send("not found, sorry");
 });
 
+
+// If the required param user id is defined then we should check for stored
 app.get('/:userid', function(req, res) {
 	if (player_list[req.params.userid] === undefined) {
 		player_list[req.params.userid] = req.params.userid;
@@ -73,6 +100,15 @@ app.get('/:userid', function(req, res) {
 		player_loc[req.params.userid] = campus[4].id;
 	}
 
+  var obj = JSON.parse(player_list[req.params.userid]);
+  //player_list[req.params.userid] = obj.userid;
+  player_inv[req.params.userid] = obj.inv;
+  player_loc[req.params.userid] = obj.loc;
+  /*else
+  {
+    file = req.params.userid + '.json';
+    fs.readFile(file, 'utf8', function(err, data));
+  }*/
 });
 
 app.get('/:userid/images/:name', function(req, res){
