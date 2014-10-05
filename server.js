@@ -3,6 +3,8 @@ var app = express();
 
 // // Reading a file
 var fs = require('fs');
+
+var buffer;
 // var file = __dirname + 'inventories.json';
 
 // fs.readFile(file, 'utf8', function (err, data) {
@@ -26,8 +28,6 @@ var fs = require('fs');
 // });
 
 
-
-
 var player_list = {};
 var player_inv =  {};
 var player_loc = {};
@@ -46,28 +46,43 @@ app.get('/', function(req, res){
 app.get('/:userid/:id', function(req, res){
 
 	// if(fs.exists(player_list[req.params.userid]+".txt"))
-	
 	if(player_list[req.params.userid] != undefined)
 	{
-		var buffer;
+		// console.log(player_list[req.params.userid]);
+		// var buffer;
 		var readobj;
-		fs.readFile(player_list[req.params.userid]+".txt", function (err, data)
+		if(fs.exists(player_list[req.params.userid]+".txt"))
 		{
-			if(err) throw err;
-			buffer = data.toString();
-			console.log(buffer);
-			// readobj = JSON.parse(buffer);
-			// console.log(readobj);
-		});
+			// consol.log("here");
+			fs.readFileSync(player_list[req.params.userid]+".txt", 'ascii', function (err, data)
+			{
+				if(err) throw err;
+				// console.log("data " +data);
+				buffer = data;
+				// console.log("buffer "+buffer);
+				// console.log(buffer);
+				// readobj = JSON.parse(buffer);
+				// console.log(readobj);
+			});
+		}
+
 		// console.log(buffer);
-		// var readobj = JSON.parse(buffer);
-		// console.log(readobj);
+
+		if(buffer != null)
+		{
+			console.log(buffer);
+			var readobj = JSON.parse(buffer);
+			console.log(readobj);
+			player_inv[req.params.userid] = readobj.playerinv;
+			player_loc[req.params.userid] = readobj.playerloc;
 		
+		}
 		var obj = {"userid" : player_list[req.params.userid], 
-						"playerinv" : player_inv[req.params.userid],
-						"playerloc" : player_loc[req.params.userid]};
+							"playerinv" : player_inv[req.params.userid],
+							"playerloc" : player_loc[req.params.userid]};
 
 		fs.writeFile(player_list[req.params.userid]+".txt", JSON.stringify(obj), "UTF-8",{'flags': 'w+'});
+		
 	}else
 	{
 		if (req.params.userid == "")
