@@ -19,9 +19,11 @@ fs.readFile(file, 'utf8', function (err, data) {
 // Writing a file
 var stream = fs.createWriteStream("inventories.txt");
 stream.once( 'open', function(fd) {
-stream.write();
+stream.write("player_inv");
 stream.end();
 });
+
+
 
 
 var player_list = {};
