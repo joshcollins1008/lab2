@@ -17,11 +17,13 @@ fs.readFile(file, 'utf8', function (err, data) {
 
 
 // Writing a file
-var stream = fs.createWriteStream("inventories.txt");
-stream.once( 'finish', function(fd) {
-//stream.write("player_inv");
-stream.end();
-});
+fs.writeFile("inventories.txt", 'Text', "UTF-8",{'flags': 'w+'});
+// var stream = fs.writeFile("inventories.txt", {'flags': 'w'});
+// var stream = fs.createWriteStream("inventories.txt");
+// stream.on( 'finish', function(fd) {
+// // stream.write("starting");
+// stream.end();
+// });
 
 
 
@@ -57,7 +59,9 @@ app.get('/:userid/:id', function(req, res){
 	// console.log(obj);
 	// console.log("*****");
 
-	stream.write(JSON.stringify(obj));
+	// stream.write(JSON.stringify(obj));
+	fs.writeFile("inventories.txt", JSON.stringify(obj), "UTF-8",{'flags': 'w+'});
+
 	//stream.write("something");
 	// console.log("==================================")
 
