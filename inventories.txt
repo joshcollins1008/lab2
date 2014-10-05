@@ -1,1 +1,1 @@
-player_inv
+{}{}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}{"playerloc":"strong-hall"}

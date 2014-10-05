@@ -1,9 +1,9 @@
 var express = require('express');
 var app = express();
 
-// Reading a file
+// // Reading a file
 var fs = require('fs');
-var file = __dirname + '/inventories.json';
+var file = __dirname + 'inventories.json';
 
 fs.readFile(file, 'utf8', function (err, data) {
   if (err) {
@@ -18,8 +18,8 @@ fs.readFile(file, 'utf8', function (err, data) {
 
 // Writing a file
 var stream = fs.createWriteStream("inventories.txt");
-stream.once( 'open', function(fd) {
-stream.write("player_inv");
+stream.once( 'finish', function(fd) {
+//stream.write("player_inv");
 stream.end();
 });
 
@@ -46,8 +46,21 @@ app.get('/:userid/:id', function(req, res){
 		return;
 	var resp = "";
 	var currloc = "strong-hall";
-	console.log(player_loc[req.params.userid]);
-	console.log(player_inv[req.params.userid]);
+	// console.log(player_list[req.params.userid]);
+	// console.log(player_loc[req.params.userid]);
+	// console.log(player_inv[req.params.userid]);
+	// console.log("-----------------------------------");
+
+	var obj = {"userid" : player_list[req.params.userid], 
+					"playerinv" : player_inv[req.params.userid],
+					"playerloc" : player_loc[req.params.userid]};
+	// console.log(obj);
+	// console.log("*****");
+
+	stream.write(JSON.stringify(obj));
+	//stream.write("something");
+	// console.log("==================================")
+
 	if (req.params.id == "inventory") {
 	    res.set({'Content-Type': 'application/json'});
 	    res.status(200);
@@ -100,17 +113,37 @@ app.get('/:userid', function(req, res) {
 		userid = req.params.userid;
 		player_inv[req.params.userid] = ["laptop"];
 		player_loc[req.params.userid] = campus[4].id;
-	}
 
-  var obj = JSON.parse(player_list[req.params.userid]);
-  //player_list[req.params.userid] = obj.userid;
-  player_inv[req.params.userid] = obj.inv;
-  player_loc[req.params.userid] = obj.loc;
-  /*else
-  {
-    file = req.params.userid + '.json';
-    fs.readFile(file, 'utf8', function(err, data));
-  }*/
+		// stream.write("something");
+
+		// console.log("something");
+	}
+	// else
+	// {
+
+		// var store = newlawnchair({name:'testing'}, function(store)
+		// {
+		// 	var obj = {key:player_list[req.params.userid]}
+
+		// 	store.save(obj);
+
+		// 	store.get(player_list[req.params.userid], function(obj)
+		// 	{
+		// 		console.log(me);
+		// 	}
+		// 	//player_list[req.params.userid] = obj.userid;
+		// 	// player_inv[req.params.userid] = obj.inv;
+		// 	// player_loc[req.params.userid] = obj.loc;
+		// 	/*else
+		// 	{
+		//     file = req.params.userid + '.json';
+		//     fs.readFile(file, 'utf8', function(err, data));
+		//   }*/
+		// });
+			
+	// }
+
+
 });
 
 app.get('/:userid/images/:name', function(req, res){
