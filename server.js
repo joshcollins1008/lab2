@@ -3,21 +3,21 @@ var app = express();
 
 // // Reading a file
 var fs = require('fs');
-var file = __dirname + 'inventories.json';
+// var file = __dirname + 'inventories.json';
 
-fs.readFile(file, 'utf8', function (err, data) {
-  if (err) {
-    console.log('Error: ' + err);
-    return;
-  }
+// fs.readFile(file, 'utf8', function (err, data) {
+//   if (err) {
+//     console.log('Error: ' + err);
+//     return;
+//   }
 
-  data = JSON.parse(data);
-  console.dir(data);
-});
+//   data = JSON.parse(data);
+//   console.dir(data);
+// });
 
 
 // Writing a file
-fs.writeFile("inventories.txt", 'Text', "UTF-8",{'flags': 'w+'});
+// fs.writeFile("inventories.txt", 'Text', "UTF-8",{'flags': 'w+'});
 // var stream = fs.writeFile("inventories.txt", {'flags': 'w'});
 // var stream = fs.createWriteStream("inventories.txt");
 // stream.on( 'finish', function(fd) {
@@ -44,26 +44,44 @@ app.get('/', function(req, res){
 
 
 app.get('/:userid/:id', function(req, res){
-	if (req.params.userid == "")
+
+	// if(fs.exists(player_list[req.params.userid]+".txt"))
+	
+	if(player_list[req.params.userid] != undefined)
+	{
+		var buffer;
+		var readobj;
+		fs.readFile(player_list[req.params.userid]+".txt", function (err, data)
+		{
+			if(err) throw err;
+			buffer = data.toString();
+			console.log(buffer);
+			// readobj = JSON.parse(buffer);
+			// console.log(readobj);
+		});
+		// console.log(buffer);
+		// var readobj = JSON.parse(buffer);
+		// console.log(readobj);
+		
+		var obj = {"userid" : player_list[req.params.userid], 
+						"playerinv" : player_inv[req.params.userid],
+						"playerloc" : player_loc[req.params.userid]};
+
+		fs.writeFile(player_list[req.params.userid]+".txt", JSON.stringify(obj), "UTF-8",{'flags': 'w+'});
+	}else
+	{
+		if (req.params.userid == "")
 		return;
-	var resp = "";
-	var currloc = "strong-hall";
-	// console.log(player_list[req.params.userid]);
-	// console.log(player_loc[req.params.userid]);
-	// console.log(player_inv[req.params.userid]);
-	// console.log("-----------------------------------");
+		var resp = "";
+		var currloc = "strong-hall";
+		// console.log(player_list[req.params.userid]);
+		// console.log(player_loc[req.params.userid]);
+		// console.log(player_inv[req.params.userid]);
+		// console.log("-----------------------------------");
 
-	var obj = {"userid" : player_list[req.params.userid], 
-					"playerinv" : player_inv[req.params.userid],
-					"playerloc" : player_loc[req.params.userid]};
-	// console.log(obj);
-	// console.log("*****");
+	}
 
-	// stream.write(JSON.stringify(obj));
-	fs.writeFile("inventories.txt", JSON.stringify(obj), "UTF-8",{'flags': 'w+'});
 
-	//stream.write("something");
-	// console.log("==================================")
 
 	if (req.params.id == "inventory") {
 	    res.set({'Content-Type': 'application/json'});
@@ -105,6 +123,9 @@ app.get('/:userid/:id', function(req, res){
 		    return;
 		}
 	}
+
+	
+
 	res.status(404);
 	res.send("not found, sorry");
 });
@@ -117,37 +138,11 @@ app.get('/:userid', function(req, res) {
 		userid = req.params.userid;
 		player_inv[req.params.userid] = ["laptop"];
 		player_loc[req.params.userid] = campus[4].id;
-
-		// stream.write("something");
-
-		// console.log("something");
 	}
-	// else
-	// {
+	else
+	{
 
-		// var store = newlawnchair({name:'testing'}, function(store)
-		// {
-		// 	var obj = {key:player_list[req.params.userid]}
-
-		// 	store.save(obj);
-
-		// 	store.get(player_list[req.params.userid], function(obj)
-		// 	{
-		// 		console.log(me);
-		// 	}
-		// 	//player_list[req.params.userid] = obj.userid;
-		// 	// player_inv[req.params.userid] = obj.inv;
-		// 	// player_loc[req.params.userid] = obj.loc;
-		// 	/*else
-		// 	{
-		//     file = req.params.userid + '.json';
-		//     fs.readFile(file, 'utf8', function(err, data));
-		//   }*/
-		// });
-			
-	// }
-
-
+	}
 });
 
 app.get('/:userid/images/:name', function(req, res){
