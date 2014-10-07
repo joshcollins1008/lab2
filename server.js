@@ -128,8 +128,8 @@ app.get('/:userid', function(req, res) {
 	if (player_list[req.params.userid] === undefined) {
 		player_list[req.params.userid] = req.params.userid;
 		userid = req.params.userid;
-		// player_inv[req.params.userid] = ["laptop"];
-		// player_loc[req.params.userid] = campus[4].id;
+		player_inv[req.params.userid] = ["laptop"];
+		player_loc[req.params.userid] = campus[4].id;
 	}
 	else
 	{
