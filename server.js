@@ -1,32 +1,14 @@
 var express = require('express');
 var app = express();
-
-// // Reading a file
-var fs = require('fs');
-
-var buffer;
-// var file = __dirname + 'inventories.json';
-
-// fs.readFile(file, 'utf8', function (err, data) {
-//   if (err) {
-//     console.log('Error: ' + err);
-//     return;
-//   }
-
-//   data = JSON.parse(data);
-//   console.dir(data);
-// });
+var flatfile = require('flat-file-db');
+var db = flatfile('database.db');
+var counter = 0;
 
 
-// Writing a file
-// fs.writeFile("inventories.txt", 'Text', "UTF-8",{'flags': 'w+'});
-// var stream = fs.writeFile("inventories.txt", {'flags': 'w'});
-// var stream = fs.createWriteStream("inventories.txt");
-// stream.on( 'finish', function(fd) {
-// // stream.write("starting");
-// stream.end();
-// });
-
+db.on('open', function()
+{
+	console.log("database is open");
+});
 
 var player_list = {};
 var player_inv =  {};
@@ -44,56 +26,51 @@ app.get('/', function(req, res){
 
 
 app.get('/:userid/:id', function(req, res){
+	console.log("*******************************************")
+	console.log(player_list[req.params.userid]);
+	console.log(player_loc[req.params.userid]);
+	console.log(player_inv[req.params.userid]);
+	console.log("-----------------------------------");
+
 
 	// if(fs.exists(player_list[req.params.userid]+".txt"))
 	if(player_list[req.params.userid] != undefined)
 	{
-		// console.log(player_list[req.params.userid]);
-		// var buffer;
-		var readobj;
-		if(fs.exists(player_list[req.params.userid]+".txt"))
-		{
-			// consol.log("here");
-			fs.readFileSync(player_list[req.params.userid]+".txt", 'ascii', function (err, data)
-			{
-				if(err) throw err;
-				// console.log("data " +data);
-				buffer = data;
-				// console.log("buffer "+buffer);
-				// console.log(buffer);
-				// readobj = JSON.parse(buffer);
-				// console.log(readobj);
-			});
-		}
-
-		// console.log(buffer);
-
-		if(buffer != null)
-		{
-			console.log(buffer);
-			var readobj = JSON.parse(buffer);
-			console.log(readobj);
-			player_inv[req.params.userid] = readobj.playerinv;
-			player_loc[req.params.userid] = readobj.playerloc;
+		console.log("not undefined");
+		//if the userid is entered
 		
-		}
-		var obj = {"userid" : player_list[req.params.userid], 
-							"playerinv" : player_inv[req.params.userid],
-							"playerloc" : player_loc[req.params.userid]};
+		if ( counter < 1 && db.has(player_list[req.params.userid]))
+		{
+			counter = 5;
+			console.log(counter);
+			console.log("has username");
+			var obj = db.get(player_list[req.params.userid]);
+			console.log(obj);
+			player_inv[req.params.userid] = obj.playerinv;
+			player_loc[req.params.userid] = obj.playerloc;
 
-		fs.writeFile(player_list[req.params.userid]+".txt", JSON.stringify(obj), "UTF-8",{'flags': 'w+'});
-		
+		}
+		else if( db.has(player_list[req.params.userid]) )
+		{
+			console.log("has username updating...");
+			var obj = {"userid" : player_list[req.params.userid],
+			"playerinv" : player_inv[req.params.userid],
+			"playerloc" : player_loc[req.params.userid]};
+			db.put(player_list[req.params.userid], obj);
+			console.log(obj);	
+		}
+		else
+		{
+			console.log("does not have username");
+			var obj = {"userid" : player_list[req.params.userid],
+			"playerinv" : player_inv[req.params.userid],
+			"playerloc" : player_loc[req.params.userid]};
+			db.put(player_list[req.params.userid], obj);
+			console.log(obj);	
+		}
 	}else
 	{
-		if (req.params.userid == "")
-		return;
-		var resp = "";
-		var currloc = "strong-hall";
-		// console.log(player_list[req.params.userid]);
-		// console.log(player_loc[req.params.userid]);
-		// console.log(player_inv[req.params.userid]);
-		// console.log("-----------------------------------");
-
+		
 	}
 
 
@@ -151,8 +128,8 @@ app.get('/:userid', function(req, res) {
 	if (player_list[req.params.userid] === undefined) {
 		player_list[req.params.userid] = req.params.userid;
 		userid = req.params.userid;
-		player_inv[req.params.userid] = ["laptop"];
-		player_loc[req.params.userid] = campus[4].id;
+		// player_inv[req.params.userid] = ["laptop"];
+		// player_loc[req.params.userid] = campus[4].id;
 	}
 	else
 	{
